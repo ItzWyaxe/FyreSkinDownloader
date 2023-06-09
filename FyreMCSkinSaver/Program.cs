@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using Newtonsoft.Json;
@@ -58,45 +58,40 @@ namespace FyreMCSkinSaver
                                     if (sr.Peek() == -1)
                                     {
                                         int startIndex = 0;
-                                        if (line.Contains("[Tag")) startIndex = line.IndexOf("[Tag") + "[Tag".Length;
-                                        if (line.Contains("[Owner")) startIndex = line.IndexOf("[Owner") + "[Owner".Length;
-                                        if (line.Contains("[Iron")) startIndex = line.IndexOf("[Iron") + "[Iron".Length;
-                                        if (line.Contains("[Emerald")) startIndex = line.IndexOf("[Emerald") + "[Emerald".Length;
-                                        if (line.Contains("[Diamond")) startIndex = line.IndexOf("[Diamond") + "[Diamond".Length;
-                                        if (line.Contains("[Admin")) startIndex = line.IndexOf("[Admin") + "[Admin".Length;
-                                        if (line.Contains("[Moderator")) startIndex = line.IndexOf("[Moderator") + "[Moderator".Length;
-                                        if (line.Contains("[Jr.Moderator")) startIndex = line.IndexOf("[Jr.Moderator") + "[Jr.Moderator".Length;
-                                        if (line.Contains("[Builder")) startIndex = line.IndexOf("[Builder") + "[Builder".Length;
-                                        if (line.Contains("[Jr.Builder")) startIndex = line.IndexOf("[Jr.Builder") + "[Jr.Builder".Length;
-                                        if (line.Contains("[Media")) startIndex = line.IndexOf("[Media") + "[Media".Length;
-                                        if (line.Contains("[Aqua")) startIndex = line.IndexOf("[Aqua") + "[Aqua".Length;
-                                        if (line.Contains("[Booster")) startIndex = line.IndexOf("[Booster") + "[Booster".Length;
-                                        if (line.Contains("[Platnium")) startIndex = line.IndexOf("[Platnium") + "[Platnium".Length;
-                                        if (line.Contains("[Team")) startIndex = line.IndexOf("[Team") + "[Team".Length;
-                                        if (line.Contains("[Netherite")) startIndex = line.IndexOf("[Netherite") + "[Netherite".Length;
-                                        if (line.Contains("[Lazurit")) startIndex = line.IndexOf("[Lazurit") + "[Lazurit".Length;
-                                        if (line.Contains("[Epic")) startIndex = line.IndexOf("[Epic") + "[Epic".Length;
-                                        if (line.Contains("[Wizard")) startIndex = line.IndexOf("[Wizard") + "[Wizard".Length;
-                                        if (line.Contains("[Blaze")) startIndex = line.IndexOf("[Blaze") + "[Blaze".Length;
-                                        if (line.Contains("[Phoenix")) startIndex = line.IndexOf("[Phoenix") + "[Phoenix".Length;
-                                        if (line.Contains("[Veteran")) startIndex = line.IndexOf("[Veteran") + "[Veteran".Length;
-                                        if (line.Contains("[Gold")) startIndex = line.IndexOf("[Gold") + "[Gold".Length;
+                                        string[] Ranks = { "[Tag", "[Owner", "[Iron", "[Emerald", "[Diamond", "[Admin", "[Moderator", "[Jr.Moderator",
+                    "[Builder", "[Jr.Builder", "[Media", "[Aqua", "[Booster", "[Platnium", "[Team", "[Netherite",
+                    "[Lazurit", "[Epic", "[Wizard", "[Blaze", "[Phoenix", "[Veteran", "[Gold" };
 
-                                        startIndex += 2;
-                                        int NChat = startIndex+3;
-
-                                        int plusIndex = line.LastIndexOf('+');
-                                        if (plusIndex != -1 && NChat > plusIndex)
+                                        bool containsrank = false;
+                                        for (int i = 0;  i < Ranks.Length; i++)
                                         {
-                                            startIndex += 1;
+                                            if (line.Contains(Ranks[i])) {
+                                                startIndex = line.IndexOf(Ranks[i]) + Ranks[i].Length;
+                                                containsrank = true;
+                                            }
                                         }
-                                        int endIndex = line.IndexOf(' ', startIndex);
 
-                                        if (startIndex != -1 && endIndex != -1)
+                                        if (containsrank && line.Contains("[CHAT]"))
                                         {
-                                            string PlayerName = line.Substring(startIndex, endIndex - startIndex);
-                                            Console.WriteLine("FyreMC log: ", PlayerName);
-                                            StartDownloadSkin(PlayerName);
+                                            startIndex += 2;
+                                            int NChat = startIndex + 3;
+
+                                            int plusIndex = line.LastIndexOf('+');
+                                            if (plusIndex != -1 && NChat > plusIndex)
+                                            {
+                                                startIndex += 1;
+                                            }
+                                            int endIndex = line.IndexOf(' ', startIndex);
+
+                                            if (startIndex != -1 && endIndex != -1)
+                                            {
+                                                string PlayerName = line.Substring(startIndex, endIndex - startIndex);
+                                                Console.WriteLine("----------------");
+                                                Console.WriteLine($"Playername: {PlayerName}");
+                                                Console.WriteLine($"Chat: {line}");
+                                                StartDownloadSkin(PlayerName);
+                                                Console.WriteLine("----------------");
+                                            }
                                         }
                                     }
                                 }
