@@ -44,7 +44,7 @@ namespace FyreMCSkinSaver
                     if (playername == "log")
                     {
                         Console.Write("Get skins from fyremc log\n");
-                        string path = Environment.ExpandEnvironmentVariables(@"C:\Users\%USERNAME%\AppData\Local\fyremc-client\app-0.9.3\logs\latest.log");
+                        string path = Environment.ExpandEnvironmentVariables(@"C:\Users\%USERNAME%\AppData\Local\fyremc-client\app-0.9.4\logs\latest.log");
 
                         using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                         using (var sr = new StreamReader(fs, System.Text.Encoding.ASCII))
