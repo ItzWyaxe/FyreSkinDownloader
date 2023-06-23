@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using Newtonsoft.Json;
@@ -43,7 +43,7 @@ namespace FyreMCSkinSaver
                     string playername = ValidInput("");
                     if (playername == "log")
                     {
-                        Console.Write("Get skins from fyremc log\n");
+                        Console.Write("Get skins from fyremc log ( app-0.9.4/logs/latest.log )\n");
                         string path = Environment.ExpandEnvironmentVariables(@"C:\Users\%USERNAME%\AppData\Local\fyremc-client\app-0.9.4\logs\latest.log");
 
                         using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -59,8 +59,8 @@ namespace FyreMCSkinSaver
                                     {
                                         int startIndex = 0;
                                         string[] Ranks = { "[Tag", "[Owner", "[Iron", "[Emerald", "[Diamond", "[Admin", "[Moderator", "[Jr.Moderator",
-                    "[Builder", "[Jr.Builder", "[Media", "[Aqua", "[Booster", "[Platnium", "[Team", "[Netherite",
-                    "[Lazurit", "[Epic", "[Wizard", "[Blaze", "[Phoenix", "[Veteran", "[Gold" };
+                                        "[Builder", "[Jr.Builder", "[Media", "[Aqua", "[Booster", "[Platnium", "[Team", "[Netherite",
+                                        "[Lazurit", "[Epic", "[Wizard", "[Blaze", "[Phoenix", "[Veteran", "[Gold" };
 
                                         bool containsrank = false;
                                         for (int i = 0;  i < Ranks.Length; i++)
@@ -70,7 +70,6 @@ namespace FyreMCSkinSaver
                                                 containsrank = true;
                                             }
                                         }
-
                                         if (containsrank && line.Contains("[CHAT]"))
                                         {
                                             startIndex += 2;
@@ -82,7 +81,6 @@ namespace FyreMCSkinSaver
                                                 startIndex += 1;
                                             }
                                             int endIndex = line.IndexOf(' ', startIndex);
-
                                             if (startIndex != -1 && endIndex != -1)
                                             {
                                                 string PlayerName = line.Substring(startIndex, endIndex - startIndex);
@@ -131,6 +129,7 @@ namespace FyreMCSkinSaver
                 dynamic json_data = fyremc_player_json.data;
                 string username = json_data.username;
                 string skin_url_2d = json_data.skin;
+                string cloak = json_data.cloak;
                 skin_url_2d = skin_url_2d.Substring(44);
                 string skinFolder = skin_url_2d.Substring(0, 2);
                 string skinURL = $"https://account.fyremc.hu/MinecraftSkins/{skinFolder}/{skin_url_2d}";
@@ -150,7 +149,29 @@ namespace FyreMCSkinSaver
                         skinStream.CopyTo(fileStream);
                     }
                 }
+                if(cloak != "https://account.fyremc.hu/skinprev.php?cloakSimple&hash=")
+                {
+                    string capeURL = cloak;
+                    HttpWebRequest capeRequest = (HttpWebRequest)WebRequest.Create(capeURL);
+                    capeRequest.UserAgent = userAgent;
+                    HttpWebResponse capeResponse = (HttpWebResponse)capeRequest.GetResponse();
 
+                    string capespath = Path.Combine(Directory.GetCurrentDirectory(), "capes");
+                    if (!Directory.Exists(capespath))
+                    {
+                        Directory.CreateDirectory(capespath);
+                    }
+
+                    using (Stream capeStream = capeResponse.GetResponseStream())
+                    {
+                        using (FileStream fileStream = File.Create($"./capes/{username}-cape.png"))
+                        {
+                            capeStream.CopyTo(fileStream);
+                        }
+                    }
+                    Console.WriteLine($"Cape saved! ( {username} )");
+
+                }
                 Console.WriteLine($"Skin saved! ( {username} )");
             }
         }
