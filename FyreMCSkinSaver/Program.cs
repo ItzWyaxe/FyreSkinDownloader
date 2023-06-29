@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 using Newtonsoft.Json;
@@ -10,7 +10,7 @@ namespace FyreMCSkinSaver
     {
         static bool ValidateInput(string text)
         {
-            string pattern = @"^[a-zA-Z0-9]+$";
+            string pattern = @"^[a-zA-Z0-9_]+$";
             if (Regex.IsMatch(text, pattern))
             {
                 return true;
